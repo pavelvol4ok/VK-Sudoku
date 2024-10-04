@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Судоку</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            padding: 1rem; /* Добавьте немного отступа */
+        }
+
+        #menu,
+    #game {
+        display: none;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    #game {
+        position: relative; 
+    }
+
+    h1 {
+        color: #000000;
+        font-size: 48px;
+        margin-bottom: 20px;
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 20px 0;
+        border: 3px solid #000; /* Добавлено: толстый контур вокруг таблицы */
+    }
+
+    td {
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        border: 1px solid #999;
+        font-size: 24px;                                                        
+        cursor: pointer;
+    }
+
+    td:hover {
+        background-color: #f0f0f0;
+    }
+
+    .thick {
+        border-top: 3px solid #000;
+    }
+
+    .thick-left {
+        border-left: 3px solid #000;
+    }
+    .incorrect {
+    color: red; /* Цвет текста для неправильного числа */
+}
+
+button {
+            width: 100%; /* Равномерно распределить кнопки по ширине */
+            padding: 1em; /* Используйте em для адаптивности */
+            font-size: 1rem; /* Размер шрифта в rem */
+            margin: 10px auto;
+        }
+
+        button:hover {
+            background-color: #bfbfbf;
+            transform: scale(1.05);
+        }
+
+        #header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 10px 20px;
+    background-color: transparent;
+    text-align: right; /* Добавьте это свойство */
+}
+
+        #timer {
+    border: 3px solid #cfcccc; /* Изменение цвета рамки */
+    padding: 10px; /* Увеличение отступов */
+    border-radius: 10px; /* Закругленные углы */
+    background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень для глубины */
+    display: inline-block;
+    width: auto;
+    max-width: 100px;
+    margin-left: auto; /* Отодвигает элемент вправо */
+}
+  
+        #back-btn {
+            padding: 10px 20px;
+            background-color: #cfcccc;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #back-btn:hover {
+            background-color: #bfbfbf;
+        }
+
+        #number-buttons {
+            display: flex;
+            flex-wrap: wrap; /* Позвоняет кнопкам переходить на новые строки */
+            justify-content: center; /* Центрируем кнопки */
+        }
+
+.number-btn {
+    width: 30px;                        
+    height: 36px;                       
+    margin: 0 5px;                     
+    padding: 0;                        
+    font-size: 24px;                   
+    color: black;                                      
+    font-family: Arial, sans-serif;    
+    cursor: pointer;
+    background-color: #cfcccc;         /* Цвет фона кнопки, такой же как у ячеек */
+    border: 0px solid #007BFF;        /* Рамка с синим цветом */
+    border-radius: 5px;                
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход */
+}
+
+.number-btn:hover {
+    background-color: #bfbfbf; /* Светло-серый цвет с затемнением при наведении */
+    transform: scale(1.05);                      /* Эффект увеличения при наведении */
+}
+
+.modal-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    background-color: #cfcccc; /* Цвет фона кнопки */
+    margin: 5px; /* Отступ между кнопками */
+}
+
+.modal-button:hover {
+    background-color: #bfbfbf; /* Светло-серый цвет с затемнением при наведении */
+    transform: scale(1.05); /* Эффект увеличения при наведении */
+}
+
+
+.selected {
+    background-color: #aee0f7; /* Цвет выделенной ячейки */
+}
+
+.player-number {
+    color: #007BFF; /* Синий цвет для пользовательского числа */
+}
+
+#lives {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* Отступ справа для красивого расположения */
+}
+
+.heart {
+    font-size: 24px; /* Размер сердечек */
+    margin-right: 5px; /* Отступ между сердечками */
+}
+#game-over-modal button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#game-over-modal button:hover {
+    background-color: #bfbfbf;
+}
+
+#win-modal,
+#game-over-modal {
+    display: none; /* Начальное состояние */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7); /* Затемняем фон */
+    z-index: 1000;
+}
+
+#win-modal > div,
+#game-over-modal > div {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+
+.highlight {
+        background-color: #aee0f779; /* Цвет выделения */
+    }
+
+    </style>
+</head>
+
+<body>
+    <div id="menu">
+        <h1>Судоку</h1>
+        <button onclick="startGame('easy')">Легко</button>
+        <button onclick="startGame('medium')">Средне</button>
+        <button onclick="startGame('hard')">Сложно</button>
+    </div>
+
+    <div id="game">
+        <div id="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;"> <!-- Добавлен отступ снизу -->
+            <div id="lives" style="display: none;"> <!-- Изначально скрыт -->
+                <span class="heart" id="heart1">❤️</span>
+                <span class="heart" id="heart2">❤️</span>
+                <span class="heart" id="heart3">❤️</span>
+            </div>
+            <div id="timer">Время: <span id="time">00:00</span></div>
+        </div>
+        <table id="sudoku-board"></table>
+    
+        <!-- Кнопки с цифрами от 1 до 9 -->
+        <div id="number-buttons">
+            <button class="number-btn" onclick="selectNumber(1)">1</button>
+            <button class="number-btn" onclick="selectNumber(2)">2</button>
+            <button class="number-btn" onclick="selectNumber(3)">3</button>
+            <button class="number-btn" onclick="selectNumber(4)">4</button>
+            <button class="number-btn" onclick="selectNumber(5)">5</button>
+            <button class="number-btn" onclick="selectNumber(6)">6</button>
+            <button class="number-btn" onclick="selectNumber(7)">7</button>
+            <button class="number-btn" onclick="selectNumber(8)">8</button>
+            <button class="number-btn" onclick="selectNumber(9)">9</button>
+            <button class="number-btn" onclick="clearNumber()">←</button> <!-- Кнопка удаления -->
+        </div>
+    
+        <button id="back-btn" onclick="showMenu()">Назад</button>
+        <button id="restart-btn" style="display:none;" onclick="restartGame()">Начать заново</button>
+    </div>
+
+    <div id="game-over-modal">
+        <div>
+            <h2 style="margin: 0; font-size: 24px;">Вы проиграли</h2>
+            <div style="margin: 20px 0;">
+                <button onclick="restartGame()" class="modal-button">Начать заново</button>
+                <button onclick="#" class="modal-button">Бесплатная попытка</button>
+                <button onclick="showMenu()" class="modal-button">В меню</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="win-modal">
+        <div>
+            <h2 style="margin: 0; font-size: 24px;">Поздравляем!</h2>
+            <p id="completion-time" style="font-size: 18px;">Время: 00:00</p>
+            <div style="margin-top: 20px;">
+                <button onclick="restartGame()" class="modal-button">Начать заново</button>
+                <button onclick="showMenu()" class="modal-button">В меню</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let startTime;
+        const difficultyLevels = {
+            easy: 1,
+            medium: 45,
+            hard: 54,
+        };
+        let currentLevel = '';
+        let selectedCell = null; // Переменная для хранения выбранной ячейки
+        let currentNumber = null; // Переменная для хранения выбранного числа
+
+        
+
+        function selectCell(cell) {
+    if (selectedCell) {
+        selectedCell.classList.remove('selected');
+        selectedCell.contentEditable = false; 
+        clearHighlight(); // Убираем выделение всех ячеек
+    }
+
+    selectedCell = cell;
+    selectedCell.classList.add('selected');
+    selectedCell.contentEditable = false; // Убедитесь, что ячейка не редактируема
+
+    // Если ячейка содержит число, вызываем highlighting
+    if (selectedCell.textContent) {
+        highlightNumber(selectedCell.textContent);
+    }
+}
+
+function highlightNumber(num) {
+    const cells = document.querySelectorAll('#sudoku-board td'); // Получаем все ячейки
+    cells.forEach(cell => {
+        if (cell.textContent === num.toString()) { // Приводим к строке для сравнения
+            cell.classList.add('highlight'); // Добавляем класс для выделения
+        }
+    });
+}
+
+function clearHighlight() {
+    const cells = document.querySelectorAll('#sudoku-board td'); // Получаем все ячейки
+    cells.forEach(cell => {
+        cell.classList.remove('highlight'); // Убираем класс выделения
+    });
+}
+
+let lives = 3; // Общее количество жизней
+
+function selectNumber(num) {
+    if (selectedCell) {
+        const cellRow = selectedCell.parentElement.rowIndex;
+        const cellCol = selectedCell.cellIndex;
+
+        const grid = getGridFromBoard();
+        if (isValid(grid, cellRow, cellCol, num)) {
+            selectedCell.textContent = num;
+            selectedCell.classList.add('player-number');
+            selectedCell.classList.remove('incorrect');
+        } else {
+            selectedCell.classList.add('incorrect');
+            selectedCell.textContent = num;
+            loseLife(); // Убрать жизнь
+        }
+        selectedCell.classList.remove('selected');
+        checkWin();
+    }
+}
+
+function loseLife() {
+    if (lives > 0) {
+        lives--;
+        const heart = document.getElementById(`heart${lives + 1}`);
+        if (heart) {
+            heart.textContent = '🖤'; // Изменяем на серое сердце
+        }
+        if (lives === 0) {
+            // Показываем всплывающее окно
+            document.getElementById('game-over-modal').style.display = 'flex';
+        }
+    }
+}
+
+function resetLives() {
+    lives = 3; // Сбрасываем количество жизней
+    const hearts = document.querySelectorAll('.heart');
+    hearts.forEach(heart => heart.textContent = '❤️'); // Возвращаем все сердечки
+}       
+
+function showMenu() {
+    document.getElementById('game-over-modal').style.display = 'none'; // Скрываем модальное окно "Game Over"
+    document.getElementById('win-modal').style.display = 'none'; // Скрываем модальное окно "Выигрыш"
+    document.getElementById('menu').style.display = 'block';
+    document.getElementById('menu').style.opacity = '1';
+    document.getElementById('game').style.display = 'none';
+    clearInterval(timerInterval);
+}
+
+function startGame(level) {
+    currentLevel = level;
+    document.getElementById('menu').style.opacity = '0';
+    setTimeout(function () {
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        document.getElementById('game').style.opacity = '1';
+        document.getElementById('lives').style.display = 'flex'; // Показываем сердечки
+        resetLives(); // Сброс жизней
+    }, 500);
+    generateSudokuBoard(level);
+    startTimer();
+}
+
+           function endGame() {
+    clearInterval(timerInterval);
+    alert('Игра окончена!'); // Или любое другое сообщение о завершении игры
+} 
+
+        function startTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            startTime = Date.now();
+            updateTime();
+            timerInterval = setInterval(updateTime, 1000);
+        }
+
+        function updateTime() {
+    if (!timerInterval) return; // Если таймер остановлен, не обновляйте время
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
+    const seconds = String(elapsed % 60).padStart(2, '0');
+    document.getElementById('time').innerText = `${minutes}:${seconds}`;
+}
+
+        function generateSudokuBoard(level) {
+            const board = document.getElementById('sudoku-board');
+            board.innerHTML = '';
+            const grid = createFullGrid();
+            removeCells(grid, difficultyLevels[level]);
+            drawGrid(board, grid);
+        }
+
+        function createFullGrid() {
+            const grid = createEmptyGrid();
+            fillGrid(grid);
+            return grid;
+        }
+
+        function createEmptyGrid() {
+            return Array.from({ length: 9 }, () => Array(9).fill(null));
+        }
+
+        function fillGrid(grid) {
+            fillDiagonalBoxes(grid);
+            fillRemaining(grid);
+        }
+
+        function fillDiagonalBoxes(grid) {
+            for (let i = 0; i < 9; i += 3) {
+                fillBox(grid, i, i);
+            }
+        }
+
+        function fillBox(grid, row, col) {
+            const used = new Set();
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    let num;
+                    do {
+                        num = Math.floor(Math.random() * 9) + 1;
+                    } while (used.has(num));
+                    grid[row + i][col + j] = num;
+                    used.add(num);
+                }
+            }
+        }
+
+        function fillRemaining(grid) {
+            const emptySpot = findEmptySpot(grid);
+            if (!emptySpot) return true;
+            const [row, col] = emptySpot;
+
+            for (let num = 1; num <= 9; num++) {
+                if (isValid(grid, row, col, num)) {
+                    grid[row][col] = num;
+                    if (fillRemaining(grid)) return true;
+                    grid[row][col] = null;
+                }
+            }
+            return false;
+        }
+
+        function findEmptySpot(grid) {
+            for (let r = 0; r < 9; r++) {
+                for (let c = 0; c < 9; c++) {
+                    if (!grid[r][c]) return [r, c];
+                }
+            }
+            return null;
+        }
+
+        function isValid(grid, row, col, num) {
+            for (let x = 0; x < 9; x++) {
+                if (grid[row][x] === num || grid[x][col] === num ||
+                    grid[Math.floor(row / 3) * 3 + Math.floor(x / 3)][Math.floor(col / 3) * 3 + x % 3] === num) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function removeCells(grid, cellsToRemove) {
+            while (cellsToRemove > 0) {
+                const row = Math.floor(Math.random() * 9);
+                const col = Math.floor(Math.random() * 9);
+                if (grid[row][col] !== null) {
+                    grid[row][col] = null;
+                    cellsToRemove--;
+                }
+            }
+        }
+
+        function drawGrid(board, grid) {
+    board.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < 9; j++) {
+            const cell = document.createElement('td');
+            cell.textContent = grid[i][j] !== null ? grid[i][j] : '';
+
+            // Удаляем contentEditable, чтобы не было курсора
+            // cell.contentEditable = grid[i][j] === null;
+
+            // Предотвратить ввод с клавиатуры в ячейках
+            cell.addEventListener('keydown', function(event) {
+                event.preventDefault();
+            });
+
+            cell.addEventListener('click', function() {
+                selectCell(cell); // Вызываем функцию выделения ячейки
+            });
+
+            // Добавляем обработчик события для сенсорных устройств
+            cell.addEventListener('touchstart', function() {
+                selectCell(cell); // Также вызываем функцию выделения ячейки
+            });
+
+            if (i % 3 === 0 && i !== 0) row.classList.add('thick');
+            if (j % 3 === 0 && j !== 0) cell.classList.add('thick-left');
+
+            row.appendChild(cell);
+        }
+        board.appendChild(row);
+    }
+}
+
+function checkWin() {
+    const grid = getGridFromBoard(); // Получите текущее состояние сетки из игрового поля
+    if (grid.every(row => row.every(cell => cell !== null))) {
+        displayWinModal(); // Покажем модальное окно выигрыша
+    }
+}
+
+function displayWinModal() {
+    clearInterval(timerInterval); // Остановим таймер
+    const completionTime = document.getElementById('time').innerText; // Получаем время
+    document.getElementById('completion-time').innerText = `Время: ${completionTime}`; // Обновляем текст времени
+    document.getElementById('win-modal').style.display = 'flex'; // Показываем модальное окно выигрыша
+}
+
+function getGridFromBoard() {
+    const grid = [];
+    const rows = document.querySelectorAll('#sudoku-board tr');
+    rows.forEach(row => {
+        const cells = Array.from(row.children).map(cell => cell.textContent ? parseInt(cell.textContent) : null);
+        grid.push(cells);
+    });
+    return grid;
+}
+
+function clearNumber() {
+    if (selectedCell) { // Проверяем, выбрана ли ячейка
+        selectedCell.textContent = ''; // Очищаем содержимое выбранной ячейки
+        selectedCell.classList.remove('player-number'); // Убираем стиль для пользовательского числа
+    }
+} 
+
+function restartGame() {
+    document.getElementById('game-over-modal').style.display = 'none'; // Скрываем модальное окно "Game Over"
+    resetLives(); // Сбрасываем жизни
+    generateSudokuBoard(currentLevel); // Генерируем новое игровое поле
+    startTimer(); // Запускаем таймер
+    document.getElementById('win-modal').style.display = 'none'; // Скрываем окно "Выигрыш"
+}
+
+        // Изначальная загрузка меню
+        showMenu();
+
+        // Показать меню с плавным переходом
+        setTimeout(() => {
+            document.getElementById('menu').style.opacity = '1';
+            document.getElementById('menu').style.display = 'block'; // Убедитесь, что меню показывает
+        }, 100);
+    </script>
+</body>
+
+</html>
