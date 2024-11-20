@@ -18,7 +18,7 @@
             padding: 1rem; /* Добавьте немного отступа */
         }
         body.dark {
-            background-color: #121212; /* Темный фон */
+            background-color: #2b2b2b; /* Темный фон */
             color: #d6d6d6; /* Белый цвет текста */
         }
 
@@ -28,7 +28,7 @@
         }
 
         body.dark labeled {
-            background-color: #1e1e1e; /* Темные кнопки */
+            background-color: #2b2b2b; /* Темные кнопки */
             color: #d6d6d6; /* Белый текст для кнопок */
         }
 
@@ -104,10 +104,6 @@ body.dark #sudoku-board td:nth-child(6) {
         cursor: pointer;
     }
 
-    td:hover {
-        background-color: #aee0f7;
-    }
-
     .thick {
         border-top: 3px solid #000;
     }
@@ -138,10 +134,6 @@ body.dark #sudoku-board td:nth-child(6) {
     transition: background-color 0.3s; /* Плавный переход цвета фона */
 }
 
-/* Эффект при наведении */
-.sudoku-button:hover {
-    background-color: #0056b3; /* Темнее при наведении */
-}
 button {
     width: 100%; /* Все кнопки будут иметь одинаковую ширину */
     padding: 1em; /* Размер отступа внутри кнопки */
@@ -149,12 +141,8 @@ button {
     margin: 0 5px; /* Отступ между кнопками по горизонтали */
 }
 
-        button:hover {
-            background-color: #bfbfbf;
-            transform: scale(1.05);
-        }
 
-        #header {
+#header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -225,10 +213,6 @@ table {
             transition: background-color 0.3s;
         }
 
-        #back-btn:hover {
-            background-color: #bfbfbf;
-        }
-
         #number-buttons {
             display: flex;
             flex-wrap: wrap; /* Позвоняет кнопкам переходить на новые строки */
@@ -250,11 +234,6 @@ table {
     transition: background-color 0.3s, transform 0.2s; /* Плавный переход */
 }
 
-.number-btn:hover {
-    background-color: #bfbfbf; /* Светло-серый цвет с затемнением при наведении */
-    transform: scale(1.05);                      /* Эффект увеличения при наведении */
-}
-
 .modal-button {
     padding: 10px 20px;
     font-size: 16px;
@@ -264,11 +243,6 @@ table {
     transition: background-color 0.3s, transform 0.2s;
     background-color: #cfcccc; /* Цвет фона кнопки */
     margin: 5px; /* Отступ между кнопками */
-}
-
-.modal-button:hover {
-    background-color: #bfbfbf; /* Светло-серый цвет с затемнением при наведении */
-    transform: scale(1.05); /* Эффект увеличения при наведении */
 }
 
 
@@ -314,10 +288,6 @@ table {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-}
-
-#game-over-modal button:hover {
-    background-color: #bfbfbf;
 }
 
 #win-modal,
@@ -409,11 +379,6 @@ table {
     transition: background-color 0.3s; /* Плавный переход цвета фона */
 }
 
-/* Эффект при наведении для кнопки подсказки */
-.hint-button:hover {
-    background-color: #bfbfbf; /* Светло-серый цвет с затемнением при наведении */
-    transform: scale(1.05);                      /* Эффект увеличения при наведении */
-}
 
 /* Стиль для кнопки "Продолжить" */
 .resume-button {
@@ -427,11 +392,6 @@ table {
     transition: background-color 0.3s; /* Плавный переход цвета фона */
 }
 
-/* Эффект при наведении для кнопки "Продолжить" */
-.resume-button:hover {
-    background-color: #a8dbb3; /* Темнее при наведении */
-}
-
 /* Стиль для кнопки "Заново" */
 .restart-button {
     background-color: #ffbdc4d0; /* Цвет фона (красный) */
@@ -442,11 +402,6 @@ table {
     font-size: 1rem; /* Размер шрифта для текста кнопки */
     cursor: pointer; /* Устанавливаем курсор на "указатель" */
     transition: background-color 0.3s; /* Плавный переход цвета фона */
-}
-
-/* Эффект при наведении для кнопки "Заново" */
-.restart-button:hover {
-    background-color: #daa7ac; /* Темнее при наведении */
 }
 
 /* Стиль для кнопок уровней сложности */
@@ -462,12 +417,6 @@ table {
     width: 100%; /* Полная ширина кнопок для унификации */
 }
 
-/* Эффект при наведении для кнопок уровней сложности */
-.difficulty-button:hover {
-    background-color: #bfbfbf; /* Светло-серый цвет с затемнением при наведении */
-    transform: scale(1.05);                      /* Эффект увеличения при наведении */
-}
-
 .loss-button {
     background-color: #e2e2e2;         /* Цвет фона кнопки */
     border: 2px solid #000000;        /* Рамка с черным цветом */
@@ -479,10 +428,6 @@ table {
     transition: background-color 0.3s; /* Плавный переход цвета при наведении */
 }
 
-.loss-button:hover {
-    background-color: #bfbfbf; /* Светло-серый цвет с затемнением при наведении */
-    transform: scale(1.05);    /* Эффект увеличения при наведении */
-}
 
 /* Добавление более специфичного селектора, чтобы убедиться, что стили применяются */
 .modal-button.loss-button {
@@ -540,6 +485,17 @@ input:checked + .slider {
 
 input:checked + .slider:before {
     transform: translateX(26px); /* Перемещение индикатора при активации */
+}
+
+.sudoku-button:active,
+.number-btn:active,
+.hint-button:active,
+.resume-button:active,
+.restart-button:active,
+.loss-button:active,
+.difficulty-button:active {
+    background-color: #a1a1a1; /* Цвет фона при нажатии */
+    transform: scale(0.95); /* Уменьшение размера */
 }
 
     </style>
