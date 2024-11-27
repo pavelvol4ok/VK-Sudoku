@@ -1205,6 +1205,19 @@ function restartGame()
     generateSudokuBoard(currentLevel); // Генерируем новое игровое поле
     startTimer(); // Запускаем таймер
     document.getElementById('win-modal').style.display = 'none'; // Скрываем окно "Выигрыш"
+
+// Проверка и показ межэкранной рекламы перед началом новой игры
+    checkAdReadyInterstitial()
+        .then(() => {
+            return showAdInterstitial(); // Показать межэкранную рекламу
+        })
+        .then(() => {
+            // Запускаем машину после показа рекламы, если это необходимо
+            // В противном случае вы можете просто продолжить игру
+        })
+        .catch(error => {
+            console.error('Ошибка при проверке рекламы:', error);
+        });
     
     isPaused = false; // Сбрасываем состояние паузы
 }
