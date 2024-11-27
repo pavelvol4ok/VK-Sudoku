@@ -595,7 +595,7 @@ input:checked + .slider:before {
             <h2 style="margin: 0; font-size: 24px;">Вы проиграли</h2>
             <div style="margin-top: 30px; display: flex; flex-direction: column; align-items: center;">
                 <button onclick="restartGame()" class="modal-button loss-button">Начать заново</button>
-                <button onclick="#" class="modal-button loss-button">Бесплатная попытка</button>
+                <button id="free-attempt-button" class="modal-button loss-button">Бесплатная попытка</button>
                 <button onclick="showMenu()" class="modal-button loss-button">В меню</button>
             </div>
         </div>
@@ -1134,6 +1134,42 @@ function checkWin() {
         displayWinModal(); // Покажем модальное окно выигрыша
     }
 }
+
+function freeAttempt() {
+    
+    checkAdReadyReward()
+        .then(() => {
+            return showAdReward(); // Показать рекламу за вознаграждение
+        })
+        .then(() => {
+            // Логика предоставления подсказки после успешного показа рекламы 
+            console.log('Подсказка предоставлена!'); // Здесь разместите логику подсказки
+        })
+        .catch(error => {
+            console.error('Ошибка при проверке рекламы:', error);
+        });
+    
+    // Восстанавливаем жизнь
+    if (lives < 3) {
+        lives++;
+        const heart = document.getElementById(`heart${lives}`);
+        if (heart) {
+            heart.textContent = '❤️'; // Возвращаем красное сердце
+        }
+    } else {
+        console.log('Жизни уже полные!');
+        return; // Если жизни уже максимальные, ничего не делаем
+    }
+
+    // Закрываем модальное окно "Game Over"
+    document.getElementById('game-over-modal').style.display = 'none'; 
+
+    // Возвращаем игру в состояние, в котором она была
+    isPaused = false; // Убираем паузу
+    startTime = Date.now() - (elapsedTime * 1000); // Восстанавливаем начальное время с учётом прошедшего
+    startTimer(); // Запускаем таймер снова
+}
+
 function displayWinModal()
  {
     clearInterval(timerInterval); // Остановим таймер
@@ -1231,6 +1267,9 @@ function restartGame()
             document.getElementById('menu').style.opacity = '1';
             document.getElementById('menu').style.display = 'block'; // Убедитесь, что меню показывает
         }, 100);
+
+        // Привязка обработчика к кнопке "Бесплатная попытка"
+document.querySelector('#free-attempt-button').addEventListener('click', freeAttempt);
     </script>
 </body>
 
