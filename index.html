@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Судоку</title>
     <style>
         body {
@@ -16,6 +16,7 @@
             font-family: Arial, sans-serif;
             background-color: #f7f9fc;
             padding: 1rem; /* Добавьте немного отступа */
+            overflow: hidden; /* Убирает прокрутку по всей странице */
         }
         body.dark {
             background-color: #2b2b2b; /* Темный фон */
@@ -165,6 +166,23 @@ table {
     border-collapse: collapse;
     margin: 20px 0;
     border: 3px solid #000; /* Толстый контур вокруг таблицы */
+}
+
+/* Медиа-запрос для экранов менее 768 пикселей для лучшей адаптивности */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 36px; /* Уменьшение размера заголовка на мобильных устройствах */
+    }
+
+    td {
+        width: 30px; /* Уменьшение размера ячейки */
+        height: 30px;
+        font-size: 18px; /* Уменьшение шрифта */
+    }
+
+    #sudoku-board {
+        width: 90%; /* Ширина игрового поля 90% */
+    }
 }
 
 /* Медиа-запрос для экранов менее 420 пикселей */
@@ -611,28 +629,49 @@ input:checked + .slider:before {
 </div>
 
     <script>
-        // Инициализация VK Bridge
-        vkBridge.send("VKWebAppInit", {});
 
-        function checkAndShowAd() {
-            vkBridge.send('VKWebAppCheckNativeAds')
-            .then(data => {
-                if (data.available) {
-                    // Если рекламные материалы доступны, показываем их
-                    vkBridge.send('VKWebAppShowNativeAds')
-                    .then(() => {
-                        // Успешное отображение рекламы
-                    })
-                    .catch(error => {
-                        console.error('Ошибка при показе рекламы:', error);
-                    });
-                } else {
-                    console.log('Рекламные материалы не доступны.');
-                }
+// Инициализация VK Bridge
+vkBridge.send("VKWebAppInit", {});
+
+function checkAndShowAd() {
+    vkBridge.send('VKWebAppCheckNativeAds')
+    .then(data => {
+        if (data.available) {
+            // Если рекламные материалы доступны, показываем их
+            vkBridge.send('VKWebAppShowNativeAds')
+            .then(() => {
+                // Успешное отображение рекламы
             })
             .catch(error => {
-                console.error('Ошибка при проверке наличия рекламы:', error);
+                console.error('Ошибка при показе рекламы:', error);
             });
+        } else {
+            console.log('Рекламные материалы не доступны.');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка при проверке наличия рекламы:', error);
+    });
+}
+
+// Проверка готовности рекламы
+function checkAdReady() {
+            return vkBridge.send('VKWebAppCheckNativeAds', { ad_format: 'interstitial' });
+        }
+
+        // Показать рекламу
+        function showAd() {
+            return vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'interstitial' })
+                .then((data) => {
+                    if (data.result) {
+                        console.log('Реклама показана');
+                    } else {
+                        console.log('Ошибка при показе рекламы');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Ошибка при показе рекламы:', error);
+                });
         }
 
 let timerInterval;
@@ -860,6 +899,15 @@ function startGame(level) {
     startTimer(); // Запускать таймер с нуля
 
     checkAndShowAd();
+
+    checkAdReady()
+                .then(() => {
+                    // Показать рекламу, если она готова
+                    showAd();
+                })
+                .catch(error => {
+                    console.error('Ошибка при проверке рекламы:', error);
+                });
 }
 
 function endGame() 
@@ -1042,14 +1090,18 @@ function drawGrid(board, grid)
     }
 }
 
-function checkWin() 
-{
+function checkWin() {
     const grid = getGridFromBoard(); // Получите текущее состояние сетки из игрового поля
-    if (grid.every(row => row.every(cell => cell !== null))) {
+    // Проверяем, все ли ячейки заполнены и верны
+    const isComplete = grid.every(row => row.every(cell => cell !== null));
+    const isCorrect = grid.every((row, rowIndex) => row.every((cell, colIndex) => {
+        return cell === solutionGrid[rowIndex][colIndex]; // Сравниваем с решением
+    }));
+
+    if (isComplete && isCorrect) {
         displayWinModal(); // Покажем модальное окно выигрыша
     }
 }
-
 function displayWinModal()
  {
     clearInterval(timerInterval); // Остановим таймер
