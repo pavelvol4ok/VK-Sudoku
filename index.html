@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Судоку</title>
     <style>
         body {
@@ -16,7 +16,6 @@
             font-family: Arial, sans-serif;
             background-color: #f7f9fc;
             padding: 1rem; /* Добавьте немного отступа */
-            overflow: hidden; /* Убирает прокрутку по всей странице */
         }
         body.dark {
             background-color: #2b2b2b; /* Темный фон */
@@ -166,23 +165,6 @@ table {
     border-collapse: collapse;
     margin: 20px 0;
     border: 3px solid #000; /* Толстый контур вокруг таблицы */
-}
-
-/* Медиа-запрос для экранов менее 768 пикселей для лучшей адаптивности */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 36px; /* Уменьшение размера заголовка на мобильных устройствах */
-    }
-
-    td {
-        width: 30px; /* Уменьшение размера ячейки */
-        height: 30px;
-        font-size: 18px; /* Уменьшение шрифта */
-    }
-
-    #sudoku-board {
-        width: 90%; /* Ширина игрового поля 90% */
-    }
 }
 
 /* Медиа-запрос для экранов менее 420 пикселей */
@@ -527,6 +509,7 @@ input:checked + .slider:before {
 
 
     </style>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 </head>
 
 <body>
@@ -628,6 +611,9 @@ input:checked + .slider:before {
 </div>
 
     <script>
+        // Инициализация VK Bridge
+        vkBridge.send("VKWebAppInit", {});
+        
 let timerInterval;
 let startTime;
 const difficultyLevels = {
@@ -1033,18 +1019,14 @@ function drawGrid(board, grid)
     }
 }
 
-function checkWin() {
+function checkWin() 
+{
     const grid = getGridFromBoard(); // Получите текущее состояние сетки из игрового поля
-    // Проверяем, все ли ячейки заполнены и верны
-    const isComplete = grid.every(row => row.every(cell => cell !== null));
-    const isCorrect = grid.every((row, rowIndex) => row.every((cell, colIndex) => {
-        return cell === solutionGrid[rowIndex][colIndex]; // Сравниваем с решением
-    }));
-
-    if (isComplete && isCorrect) {
+    if (grid.every(row => row.every(cell => cell !== null))) {
         displayWinModal(); // Покажем модальное окно выигрыша
     }
 }
+
 function displayWinModal()
  {
     clearInterval(timerInterval); // Остановим таймер
