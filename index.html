@@ -789,6 +789,15 @@ function selectNumber(num)
 
 function giveHint() 
 {
+    checkAdReady()
+                .then(() => {
+                    // Показать рекламу, если она готова
+                    showAd();
+                })
+                .catch(error => {
+                    console.error('Ошибка при проверке рекламы:', error);
+                });
+    
     const emptyCells = []; // Массив для хранения пустых ячеек
 
     // Сначала собираем все пустые ячейки в массив
@@ -820,15 +829,6 @@ function giveHint()
     {
         alert('Нет доступных пустых ячеек для подсказки!'); // Если нет пустых ячеек
     }
-
-    checkAdReady()
-                .then(() => {
-                    // Показать рекламу, если она готова
-                    showAd();
-                })
-                .catch(error => {
-                    console.error('Ошибка при проверке рекламы:', error);
-                });
 }
 
 function loseLife() 
