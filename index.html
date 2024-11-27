@@ -614,18 +614,24 @@ input:checked + .slider:before {
         // Инициализация VK Bridge
         vkBridge.send("VKWebAppInit", {});
 
-        function showBannerAd() {
-            vkBridge.send('VKWebAppShowBannerAd', {
-                banner_location: 'bottom'
-            })
-            .then((data) => { 
-                if (data.result) {
-                    // Баннерная реклама отобразилась
+        function checkAndShowAd() {
+            vkBridge.send('VKWebAppCheckNativeAds')
+            .then(data => {
+                if (data.available) {
+                    // Если рекламные материалы доступны, показываем их
+                    vkBridge.send('VKWebAppShowNativeAds')
+                    .then(() => {
+                        // Успешное отображение рекламы
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при показе рекламы:', error);
+                    });
+                } else {
+                    console.log('Рекламные материалы не доступны.');
                 }
             })
-            .catch((error) => {
-                // Ошибка
-                console.log(error);
+            .catch(error => {
+                console.error('Ошибка при проверке наличия рекламы:', error);
             });
         }
 
@@ -853,7 +859,7 @@ function startGame(level) {
     generateSudokuBoard(level);
     startTimer(); // Запускать таймер с нуля
 
-    showBannerAd();
+    checkAndShowAd();
 }
 
 function endGame() 
