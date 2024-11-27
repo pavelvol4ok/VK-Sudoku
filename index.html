@@ -613,7 +613,22 @@ input:checked + .slider:before {
     <script>
         // Инициализация VK Bridge
         vkBridge.send("VKWebAppInit", {});
-        
+
+        function showBannerAd() {
+            vkBridge.send('VKWebAppShowBannerAd', {
+                banner_location: 'bottom'
+            })
+            .then((data) => { 
+                if (data.result) {
+                    // Баннерная реклама отобразилась
+                }
+            })
+            .catch((error) => {
+                // Ошибка
+                console.log(error);
+            });
+        }
+
 let timerInterval;
 let startTime;
 const difficultyLevels = {
@@ -837,6 +852,8 @@ function startGame(level) {
     elapsedTime = 0; // Сброс времени в начале новой игры
     generateSudokuBoard(level);
     startTimer(); // Запускать таймер с нуля
+
+    showBannerAd();
 }
 
 function endGame() 
