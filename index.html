@@ -7,17 +7,17 @@
     <title>Судоку</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f7f9fc;
-            padding: 1rem; /* Добавьте немного отступа */
-            overflow: hidden; /* Убирает прокрутку по всей странице */
-        }
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Центрируем по вертикали */
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f7f9fc;
+    padding: 1rem; /* Добавьте немного отступа */
+    overflow: hidden; /* Убирает прокрутку по всей странице */
+}
         body.dark {
             background-color: #2b2b2b; /* Темный фон */
             color: #d6d6d6; /* Белый цвет текста */
@@ -78,22 +78,34 @@ body.dark #sudoku-board td:nth-child(6) {
 
         #menu,
     #game {
-        display: none;
-        text-align: center;
-        opacity: 0;
-        transition: opacity 0.5s ease;
+        display: block;
+        width: 100%;
+        margin: 0 auto;
     }
 
     #game {
-        position: relative; 
-    }
+    display: flex; /* Используем флекс для центровки содержимого */
+    flex-direction: column; /* Размещение элементов по вертикали */
+    justify-content: center; /* Центрируем по вертикали */
+    align-items: center; /* Центрируем по горизонтали */
+    position: relative; 
+    max-width: 440px; /* Ограничиваем максимальную ширину до 440 пикселей */
+    width: 100%; /* Позволяет контейнеру занимать полную ширину доступного пространства */
+    margin: 0 auto; /* Центрирует контейнер */
+}
 
-    h1 {
-        color: #000000;
-        font-size: 48px;
-        margin-bottom: 20px;
-        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
-    }
+#menu {
+    text-align: center; /* Центрируем содержимое */
+    margin: 0 auto; /* Центрируем сам контейнер при необходимости */
+}
+
+h1 {
+    color: #000000;
+    font-size: 48px;
+    margin: 0; /* Убрать отступ */
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 
 
     td {
@@ -154,11 +166,17 @@ button {
 }
 
 #sudoku-board {
-    margin-top: 1px; /* Увеличьте отступ сверху для игрового поля */
-    width: 100%; /* Полная ширина по умолчанию */
-    max-width: 500px; /* Максимальная ширина поля */
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
+    width: 90vw; /* Используем 90% ширины экрана */
+    height: 90vw; /* Используем 90% высоты экрана, чтобы сохранить квадратную форму */
+    max-width: 440px; /* Ограничиваем максимальную ширину */
+    max-height: 440px; /* Ограничиваем максимальную высоту */
+    align-self: center; /* Центрирование игрового поля */
+}
+
+#sudoku-board td {
+    width: calc(100% / 9); /* Делаем ширину ячеек равной 1/9 ширины поля */
+    height: calc(100% / 9); /* Делаем высоту ячеек равной 1/9 высоты поля */
+    font-size: 24px; /* Установи нужный размер шрифта */
 }
 
 table {
@@ -168,46 +186,7 @@ table {
     border: 3px solid #000; /* Толстый контур вокруг таблицы */
 }
 
-/* Медиа-запрос для экранов менее 768 пикселей для лучшей адаптивности */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 36px; /* Уменьшение размера заголовка на мобильных устройствах */
-    }
 
-    td {
-        width: 30px; /* Уменьшение размера ячейки */
-        height: 30px;
-        font-size: 18px; /* Уменьшение шрифта */
-    }
-
-    #sudoku-board {
-        width: 90%; /* Ширина игрового поля 90% */
-    }
-}
-
-/* Медиа-запрос для экранов менее 420 пикселей */
-@media (max-width: 420px) {
-    #sudoku-board {
-        width: 350px; /* Устанавливаем фиксированную ширину для узких экранов */
-        margin-left: auto; /* Центрирование */
-        margin-right: auto; /* Центрирование */
-    }
-
-    td {
-        width: 30px; /* Пример изменения по желанию */
-        height: 30px; /* Пример изменения по желанию */
-        font-size: 20px; /* Пример изменения по желанию */
-    }
-}
-
-/* Медиа-запрос для экранов менее 360 пикселей */
-@media (max-width: 360px) {
-    #sudoku-board {
-        width: 320px; /* Устанавливаем фиксированную ширину для еще более узких экранов */
-        margin-left: auto; /* Центрирование */
-        margin-right: auto; /* Центрирование */
-    }
-}
 
 #timer {
     border: 3px solid #cfcccc; /* Изменение цвета рамки */
@@ -232,10 +211,13 @@ table {
         }
 
         #number-buttons {
-            display: flex;
-            flex-wrap: wrap; /* Позвоняет кнопкам переходить на новые строки */
-            justify-content: center; /* Центрируем кнопки */
-        }
+        display: flex; 
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: stretch; 
+        margin-top: 30px; /* Сдвигает кнопки немного ниже */
+        width: 100%; 
+    }
 
 .number-btn {
     width: 30px;                        
@@ -250,6 +232,13 @@ table {
     border: 2px solid #000000;        /* Рамка с синим цветом */
     border-radius: 5px;                
     transition: background-color 0.3s, transform 0.2s; /* Плавный переход */
+}
+
+#difficulty-buttons {
+    display: flex; /* Используем Flexbox */
+    flex-direction: column; /* Изменяем направление на столбец */
+    align-items: center; /* Центруем элементы по горизонтали */
+    margin-top: 20px; /* Отступ сверху для отделения от заголовка */
 }
 
 .modal-button {
@@ -273,12 +262,12 @@ table {
 }
 
 #game-header {
-    display: flex; /* Используем flexbox для размещения элементов в одну строку */
-    justify-content: space-between; /* Распределяем элементы по ширине */
-    align-items: center; /* Выравниваем элементы по центру по вертикали */
-    margin-bottom: 10px; /* Отступ снизу, чтобы отделить от игрового поля */
-    width: 100%; /* Заполняем доступное пространство */
-}
+        display: flex; 
+        justify-content: space-between; 
+        align-items: flex-start; /* Чтобы жизней и таймер был на верху */
+        width: 100%; 
+        margin-bottom: 10px; /* Увеличьте отступ для нижнего поля */
+    }
 
 #lives {
     display: flex; /* Flexbox для размещения сердечек в ряд */
@@ -353,35 +342,35 @@ table {
 }
 
 #pause-container {
-    margin-bottom: 10px; /* Добавляет отступ снизу к контейнеру паузы */
-    display: flex; /* Для выравнивания содержимого */
-    justify-content: center; /* Центрируем кнопку по горизонтали */
+    display: flex; /* Используем Flexbox */
+    justify-content: space-between; /* Размещаем кнопки по краям */
+    align-items: center; /* Центрируем кнопки по вертикали */
+    max-width: 420px; /* Устанавливаем максимальную ширину контейнера */
+    width: 100%; /* Позволяем контейнеру занимать полную ширину */
+    margin: 0 auto; /* Центрируем контейнер */
+    padding: 0 10px; /* Добавьте небольшой отступ по бокам для красоты */
+    margin-top: 10px; /* Поднимите контейнер с паузой */
+    margin-bottom: 20px; /* Отступ снизу, если нужно */
 }
+
 
 #pause-btn {
-    background: none; /* Убираем фоновый цвет */
-    border: none; /* Убираем границу */
-    cursor: pointer; /* Устанавливаем курсор как указатель */
-    padding: 0; /* Убираем внутренние отступы */
-    width: 30px; /* Установите ширину кнопки */
-    height: 30px; /* Установите высоту кнопки */
-    margin-left: 220px; /* Устанавливаем отступ слева от кнопки */
+    margin-left: 50px; /* Сдвигаем кнопку паузы на 20 пикселей влево */
 }
 
-#back-btn {
+#back-btn, #pause-btn {
+    width: 40px; /* Указываем фиксированную ширину для кнопок */
+    height: 40px; /* Указываем фиксированную высоту для кнопок */
     background: none; /* Убираем фоновый цвет */
     border: none; /* Убираем границу */
     cursor: pointer; /* Устанавливаем курсор как указатель */
     padding: 0; /* Убираем внутренние отступы */
-    margin-right: 100px; /* Отступ между кнопками */
-    margin-left: 0px; /* Устанавливаем отступ слева от кнопки */
-    width: 30px; /* Установите ширину кнопки */
-    height: 30px; /* Установите высоту кнопки */
+    flex-shrink: 0; /* Запрещает уменьшение размера кнопок */
 }
 
 #pause-icon, #back-icon {
-    max-width: 100%; /* Максимальная ширина изображения */
-    max-height: 100%; /* Максимальная высота изображения */
+    width: 30px; /* Укажите фиксированную ширину */
+    height: 30px; /* Укажите фиксированную высоту */
     object-fit: contain; /* Обеспечивает правильное соотношение сторон */
 }
 
@@ -432,7 +421,9 @@ table {
     font-size: 1rem; /* Размер шрифта для текста кнопки */
     cursor: pointer; /* Устанавливаем курсор на "указатель" */
     transition: background-color 0.3s; /* Плавный переход цвета фона */
-    width: 100%; /* Полная ширина кнопок для унификации */
+    max-width: 220px; /* Ограничиваем максимальную ширину кнопок до 220 пикселей */
+    width: 100%; /* Позволяем кнопкам занимать полную ширину контейнера */
+    margin: 10px auto; /* Устанавливаем отступы сверху и снизу, центруем кнопки */
 }
 
 .loss-button {
@@ -488,7 +479,7 @@ table {
 
 /* Установить состояние ползунка при активном состоянии */
 input:checked + .slider {
-    background-color: #007bff; /* Цвет фона при включенном состоянии */
+    background-color: #4d4d58; /* Цвет фона при включенном состоянии */
 }
 
 input:checked + .slider:before {
@@ -888,6 +879,22 @@ function showMenu()
     document.getElementById('game').style.display = 'none';
     clearInterval(timerInterval);
 }
+
+function resizeSudokuBoard() {
+    const board = document.getElementById('sudoku-board');
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Выбираем минимальное значение между шириной и высотой экрана
+    const size = Math.min(screenWidth, screenHeight) * 0.9; // например, 90% от меньшего размера экрана
+
+    board.style.width = `${size}px`;
+    board.style.height = `${size}px`;
+}
+
+// Вызываем функцию при загрузке страницы и изменении размера окна
+window.onload = resizeSudokuBoard;
+window.onresize = resizeSudokuBoard;
 
 function startGame(level) {
     currentLevel = level;
