@@ -167,10 +167,11 @@ button {
 
 #sudoku-board {
     width: 90vw; /* Используем 90% ширины экрана */
-    height: 90vw; /* Используем 90% высоты экрана, чтобы сохранить квадратную форму */
-    max-width: 440px; /* Ограничиваем максимальную ширину */
-    max-height: 440px; /* Ограничиваем максимальную высоту */
-    align-self: center; /* Центрирование игрового поля */
+    height: 90vw; /* Также высота в 90% от ширины экрана для квадратной формы */
+    max-width: 440px; /* Максимальная ширина */
+    max-height: 440px; /* Максимальная высота */
+    align-self: center; /* Центрируем игровое поле */
+    margin: 0 auto; /* Выравнивание через маргин */
 }
 
 #sudoku-board td {
@@ -348,24 +349,27 @@ table {
     max-width: 420px; /* Устанавливаем максимальную ширину контейнера */
     width: 100%; /* Позволяем контейнеру занимать полную ширину */
     margin: 0 auto; /* Центрируем контейнер */
-    padding: 0 10px; /* Добавьте небольшой отступ по бокам для красоты */
-    margin-top: 10px; /* Поднимите контейнер с паузой */
-    margin-bottom: 20px; /* Отступ снизу, если нужно */
+    margin-top: 40px; /* Поднимите контейнер с паузой */
+    margin-bottom: 0px; /* Отступ снизу, если нужно */
 }
 
+#back-btn {
+    margin: 0; /* Убираем отступ */
+}
 
 #pause-btn {
-    margin-left: 50px; /* Сдвигаем кнопку паузы на 20 пикселей влево */
+    margin: 0; /* Убираем отступ */
 }
 
+
 #back-btn, #pause-btn {
-    width: 40px; /* Указываем фиксированную ширину для кнопок */
-    height: 40px; /* Указываем фиксированную высоту для кнопок */
+    padding: 0; /* Убираем внутренние отступы */
+    margin: 0; /* Убираем внешние отступы */
+    width: 40px; /* Указываем фиксированную ширину */
+    height: 40px; /* Указываем фиксированную высоту */
     background: none; /* Убираем фоновый цвет */
     border: none; /* Убираем границу */
     cursor: pointer; /* Устанавливаем курсор как указатель */
-    padding: 0; /* Убираем внутренние отступы */
-    flex-shrink: 0; /* Запрещает уменьшение размера кнопок */
 }
 
 #pause-icon, #back-icon {
@@ -451,39 +455,43 @@ table {
 
 
 .theme-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+    position: absolute; /* Перемещаем его из потока документа */
+    width: 60px; /* Задаем фиксированные размеры, чтобы он не занимал лишнее место */
+    height: 34px; /* Задаем фиксированные размеры, чтобы он не занимал лишнее место */
+    opacity: 0; /* Полностью скрываем его */
+    cursor: pointer; /* Устанавливаем указатель, чтобы пользователь понимал, что область кликабельна */
 }
 
 .slider {
-    width: 60px; /* Установите фиксированную ширину */
-    height: 34px; /* Установите высоту */
-    position: relative; /* Относительное позиционирование для правильного выравнивания */
-    overflow: hidden; /* Обрезаем лишнее содержимое */
-    background-color: #ccc; /* Цвет фона при неактивном состоянии */
-    border-radius: 34px; /* Закругление краев */
+    width: 60px; 
+    height: 34px; 
+    position: relative; 
+    background-color: #ccc; 
+    border-radius: 34px; 
+    cursor: pointer; /* Указатель при наведении на ползунок */
 }
 
+/* Кнопка внутри переключателя */
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white; /* Цвет индикатора */
-    transition: .4s;
-    border-radius: 50%; /* Круглый индикатор */
+    height: 26px; 
+    width: 26px; 
+    left: 4px; 
+    bottom: 4px; 
+    background-color: white; 
+    transition: .4s; 
+    border-radius: 50%; 
 }
+
 
 /* Установить состояние ползунка при активном состоянии */
 input:checked + .slider {
-    background-color: #4d4d58; /* Цвет фона при включенном состоянии */
+    background-color: #4d4d58; 
 }
 
 input:checked + .slider:before {
-    transform: translateX(26px); /* Перемещение индикатора при активации */
+    transform: translateX(26px); 
 }
 
 .sudoku-button:active,
@@ -502,7 +510,6 @@ input:checked + .slider:before {
     align-items: center; /* Центрирует элементы по вертикали */
     justify-content: center; /* Центрирует элементы по горизонтали */
     margin-top: 10px; /* Отступ сверху */
-    width: 100%; /* Используйте 100% ширины контейнера */
 }
 .sun-icon {
     width: 30px; /* Установите нужный размер */
