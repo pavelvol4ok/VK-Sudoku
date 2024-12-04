@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Статистика Судоку</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 10px; /* Убираем верхний отступ у заголовка */
+            font-size: 24px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto 10px auto; /* Убираем верхний отступ и добавляем нижний отступ для таблицы */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            border: 2px solid #000;
+            padding: 8px; /* Уменьшенные отступы */
+            text-align: center; /* Центрирование текста в ячейках */
+            font-size: 16px; /* Размер шрифта */
+        }
+
+        th {
+            background-color: #e2e2e2;
+            color: rgb(0, 0, 0);
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px; /* Уменьшение размера заголовка для мобильных устройств */
+            }
+
+            th,
+            td {
+                padding: 5px; /* Уменьшенные отступы для мобильных устройств */
+                font-size: 14px; /* Уменьшение размера шрифта для мобильных */
+            }
+        }
+
+        .back-button {
+            background-color: #e2e2e2; /* Цвет фона кнопки, такой же как у ячеек */
+            border: 2px solid #000000; /* Рамка с черным цветом */
+            color: rgb(0, 0, 0); /* Цвет текста */
+            padding: 0; /* Убираем отступы */
+            border-radius: 5px; /* Закругленные углы */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Указатель при наведении */
+            height: 30px; /* Устанавливаем высоту кнопки */
+            width: 70px;
+            line-height: 20px; /* Выравниваем текст по центру относительно высоты кнопки */
+            text-align: center; /* Центрируем текст в кнопке */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Статистика</h1>
+    <table id="statistics-table">
+        <tr>
+            <th>Сложность</th>
+            <th>Пройдено</th>
+            <th>Рекорд</th>
+        </tr>
+        <tr>
+            <td>Легкий</td>
+            <td id="easy-wins">0</td>
+            <td id="easy-best-time">00:00</td>
+        </tr>
+        <tr>
+            <td>Средний</td>
+            <td id="medium-wins">0</td>
+            <td id="medium-best-time">00:00</td>
+        </tr>
+        <tr>
+            <td>Сложный</td>
+            <td id="hard-wins">0</td>
+            <td id="hard-best-time">00:00</td>
+        </tr>
+        <tr>
+            <td>Эксперт</td>
+            <td id="expert-wins">0</td>
+            <td id="expert-best-time">00:00</td>
+        </tr>
+        <tr>
+            <td>Экстремальный</td>
+            <td id="extreme-wins">0</td>
+            <td id="extreme-best-time">00:00</td>
+        </tr>
+        <tr>
+            <td>Общее</td>
+            <td id="total-wins">0</td>
+            <td id="total-best-time">00:00</td>
+        </tr>
+    </table>
+    <button class="back-button" onclick="location.href='index.html'">Назад</button>
+</body>
+<script>
+    // Загрузка статистики из localStorage
+    function loadStatistics() {
+        const statistics = JSON.parse(localStorage.getItem('sudokuStatistics')) || {
+            easy: { wins: 0, bestTime: "00:00" },
+            medium: { wins: 0, bestTime: "00:00" },
+            hard: { wins: 0, bestTime: "00:00" },
+            expert: { wins: 0, bestTime: "00:00" },
+            extreme: { wins: 0, bestTime: "00:00" },
+            total: { wins: 0, bestTime: "00:00" }
+        };
+
+        document.getElementById('easy-wins').innerText = statistics.easy.wins;
+        document.getElementById('easy-best-time').innerText = statistics.easy.bestTime;
+        document.getElementById('medium-wins').innerText = statistics.medium.wins;
+        document.getElementById('medium-best-time').innerText = statistics.medium.bestTime;
+        document.getElementById('hard-wins').innerText = statistics.hard.wins;
+        document.getElementById('hard-best-time').innerText = statistics.hard.bestTime;
+        document.getElementById('expert-wins').innerText = statistics.expert.wins;
+        document.getElementById('expert-best-time').innerText = statistics.expert.bestTime;
+        document.getElementById('extreme-wins').innerText = statistics.extreme.wins;
+        document.getElementById('extreme-best-time').innerText = statistics.extreme.bestTime;
+        document.getElementById('total-wins').innerText = statistics.total.wins;
+        document.getElementById('total-best-time').innerText = statistics.total.bestTime;
+    }
+
+    loadStatistics();
+</script>
+</html>
