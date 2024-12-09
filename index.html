@@ -83,6 +83,7 @@ body.dark #sudoku-board td:nth-child(6) {
         margin: 0 auto;
     }
 
+    
     #game {
     display: flex; /* Используем флекс для центровки содержимого */
     flex-direction: column; /* Размещение элементов по вертикали */
@@ -349,7 +350,7 @@ table {
     max-width: 420px; /* Устанавливаем максимальную ширину контейнера */
     width: 100%; /* Позволяем контейнеру занимать полную ширину */
     margin: 0 auto; /* Центрируем контейнер */
-    margin-top: 40px; /* Поднимите контейнер с паузой */
+    margin-top: 0px; /* Поднимите контейнер с паузой */
     margin-bottom: 0px; /* Отступ снизу, если нужно */
 }
 
@@ -523,6 +524,71 @@ input:checked + .slider:before {
     margin-left: 10px; /* Отступ между слайдером и иконкой луны */
 }
 
+.pause-modal {
+    display: none; /* Начальное состояние */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7); /* Затемняем фон */
+    z-index: 1000;
+}
+
+.pause-modal > div {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.win-modal {
+    display: none; /* Начальное состояние */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7); /* Затемняем фон */
+    z-index: 1000;
+}
+
+.win-modal > div {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Стили для модального окна паузы */
+body.dark .pause-modal > div {
+    background: #2b2b2b; /* Темный фон для модального окна паузы */
+    color: #d6d6d6; /* Цвет текста для темной темы */
+}
+
+/* Стили для модального окна выигрыша */
+body.dark .win-modal > div {
+    background: #2b2b2b; /* Темный фон для модального окна выигрыша */
+    color: #d6d6d6; /* Цвет текста для темной темы */
+}
+
+body.dark .resume-button {
+    background-color: #e2e2e2;         /* Цвет фона кнопки */
+    border: 2px solid #000000;        /* Рамка с черным цветом */
+    color: rgb(0, 0, 0); /* Цвет текста */
+}
+
+body.dark .restart-button {
+    background-color: #e2e2e2;         /* Цвет фона кнопки */
+    border: 2px solid #000000;        /* Рамка с черным цветом */
+    color: rgb(0, 0, 0); /* Цвет текста */
+}
 
     </style>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
@@ -600,7 +666,7 @@ input:checked + .slider:before {
         </div>
     </div>
     
-    <div id="win-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.7); z-index: 1000;">
+    <div class="win-modal" style="display: none;">
         <div>
             <h2 style="margin: 0; font-size: 24px;">Поздравляем!</h2>
             <p id="completion-time" style="font-size: 18px;">Время: 00:00</p>
@@ -611,21 +677,21 @@ input:checked + .slider:before {
         </div>
     </div>
 
-<div id="pause-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.7); z-index: 1000;">
-    <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
-        <h2 style="margin: 0; font-size: 24px;">Пауза</h2>
-        <div style="margin-top: 20px;">
-            <span style="font-weight: bold;">Время:</span> <span id="paused-time">00:00</span>
-        </div>
-        <div style="margin-top: 20px;">
-            <span style="font-weight: bold;">Сложность:</span> <span id="paused-difficulty">Легкий</span> <!-- Здесь установится уровень сложности -->
-        </div>
-        <div style="margin-top: 30px; display: flex; flex-direction: column; align-items: center;">
-            <button onclick="resumeGame()" class="modal-button resume-button" style="width: 100%;">Продолжить</button>
-            <button onclick="restartGame()" class="modal-button restart-button" style="width: 100%;">Заново</button>
+    <div class="pause-modal" style="display: none;">
+        <div>
+            <h2 style="margin: 0; font-size: 24px;">Пауза</h2>
+            <div style="margin-top: 20px;">
+                <span style="font-weight: bold;">Время:</span> <span id="paused-time">00:00</span>
+            </div>
+            <div style="margin-top: 20px;">
+                <span style="font-weight: bold;">Сложность:</span> <span id="paused-difficulty">Легкий</span> <!-- Здесь установится уровень сложности -->
+            </div>
+            <div style="margin-top: 30px; display: flex; flex-direction: column; align-items: center;">
+                <button onclick="resumeGame()" class="modal-button resume-button" style="width: 100%;">Продолжить</button>
+                <button onclick="restartGame()" class="modal-button restart-button" style="width: 100%;">Заново</button>
+            </div>
         </div>
     </div>
-</div>
 
     <script>
 
@@ -932,10 +998,10 @@ function resetLives()
     hearts.forEach(heart => heart.textContent = '❤️'); // Возвращаем все сердечки
 }       
 
-function showMenu() 
-{
+// Скрывать модальные окна
+function showMenu() {
+    document.querySelector('.win-modal').style.display = 'none'; // Скрываем модальное окно выигрыша
     document.getElementById('game-over-modal').style.display = 'none'; // Скрываем модальное окно "Game Over"
-    document.getElementById('win-modal').style.display = 'none'; // Скрываем модальное окно "Выигрыш"
     document.getElementById('menu').style.display = 'block';
     document.getElementById('menu').style.opacity = '1';
     document.getElementById('game').style.display = 'none';
@@ -1239,12 +1305,13 @@ function freeAttempt() {
     startTimer(); // Запускаем таймер снова
 }
 
-function displayWinModal()
- {
+function displayWinModal() {
     clearInterval(timerInterval); // Остановим таймер
     const completionTime = document.getElementById('time').innerText; // Получаем время
     document.getElementById('completion-time').innerText = `Время: ${completionTime}`; // Обновляем текст времени
-    document.getElementById('win-modal').style.display = 'flex'; // Показываем модальное окно выигрыша
+
+    // Показать модальное окно выигрыша
+    document.querySelector('.win-modal').style.display = 'flex'; // Используем класс вместо ID
 }
 
 function getGridFromBoard() 
@@ -1276,56 +1343,63 @@ let elapsedTime = 0; // Для хранения прошедшего време�
 
 function togglePause() {
     if (isPaused) {
+        // Если игра снова возобновляется
         resumeGame();
     } else {
-        // Пауза
+        // Игру следует приостановить
         clearInterval(timerInterval); // Остановить таймер
-        isPaused = true;
+        isPaused = true; // Устанавливаем, что игра приостановлена
 
-        // Сохраните время, когда игра была в паузе
+        // Сохраняем текущее время
         elapsedTime = Math.floor((Date.now() - startTime) / 1000); // Сохраняем прошедшее время в секундах
         
-        // Показать модальное окно паузы
+        // Скрываем другие модальные окна, если они открыты
+        document.querySelector('.win-modal').style.display = 'none'; // Скрываем модал "Выигрыш"
+        document.getElementById('game-over-modal').style.display = 'none'; // Скрываем модальное окно "Game Over"
+
+        // Показываем модальное окно паузы
         document.getElementById('paused-time').innerText = document.getElementById('time').innerText; // Обновим текущее время
         document.getElementById('paused-difficulty').innerText = document.getElementById('difficulty').innerText; // Обновим уровень сложности
-        document.getElementById('pause-modal').style.display = 'flex'; // Показываем модальное окно
+        document.querySelector('.pause-modal').style.display = 'flex'; // Показываем модальное окно паузы
     }
 }
 
 function resumeGame() {
     isPaused = false;
-    document.getElementById('pause-modal').style.display = 'none'; // Скрыть модальное окно
+    const pauseModal = document.querySelector('.pause-modal'); // Измените выбор элемента
+    pauseModal.style.display = 'none'; // Скрыть модальное окно
     
     // Запускаем таймер снова, прибавляя сохранённое время
     startTime = Date.now() - (elapsedTime * 1000); // Восстанавливаем начальное время с учётом прошедшего времени
     startTimer(); // Запустить таймер снова
 }
 
-function restartGame() 
-{
+function restartGame() {
+    document.querySelector('.win-modal').style.display = 'none'; // Скрываем модальное окно выигрыша
+    document.querySelector('.pause-modal').style.display = 'none'; // Скрываем модальное окно паузы, если оно открыто
     document.getElementById('game-over-modal').style.display = 'none'; // Скрываем модальное окно "Game Over"
-    document.getElementById('pause-modal').style.display = 'none'; // Скрываем модальное окно "Пауза"
+    
     resetLives(); // Сбрасываем жизни
     elapsedTime = 0; // Сброс времени
     generateSudokuBoard(currentLevel); // Генерируем новое игровое поле
     startTimer(); // Запускаем таймер
     document.getElementById('win-modal').style.display = 'none'; // Скрываем окно "Выигрыш"
 
-// Проверка и показ межэкранной рекламы перед началом новой игры
+    // Проверка и показ межэкранной рекламы перед началом новой игры
     checkAdReadyInterstitial()
         .then(() => {
             return showAdInterstitial(); // Показать межэкранную рекламу
         })
         .then(() => {
-            // Запускаем машину после показа рекламы, если это необходимо
-            // В противном случае вы можете просто продолжить игру
+            // Если реклама успешно показана, можно продолжать игру
         })
         .catch(error => {
             console.error('Ошибка при проверке рекламы:', error);
         });
-    
+
     isPaused = false; // Сбрасываем состояние паузы
 }
+
 setTheme();
 
         // Изначальная загрузка меню
