@@ -10,6 +10,11 @@ body.dark {
 background-color: #2b2b2b; / Темный фон /
 }
 
+body.dark h1 {
+    color: #d6d6d6; /* Белый цвет текста для заголовка */
+}
+
+
 /* Стили для таблицы в темной теме */
 body.dark table {
     border: 3px solid #606479; /* Цвет контура таблицы в темной теме */
@@ -50,8 +55,10 @@ border-color: #606479;
         }
 
         h1 {
-            margin: 0 0 10px; /* Убираем верхний отступ у заголовка */
-            font-size: 24px;
+            color: #000000;
+            font-size: 28px;
+            margin: 10; /* Убрать отступ */
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         table {
@@ -101,6 +108,7 @@ border-color: #606479;
             width: 70px;
             line-height: 20px; /* Выравниваем текст по центру относительно высоты кнопки */
             text-align: center; /* Центрируем текст в кнопке */
+            margin: 10px;
         }
     </style>
 </head>
@@ -138,11 +146,6 @@ border-color: #606479;
             <td id="extreme-wins">0</td>
             <td id="extreme-best-time">00:00</td>
         </tr>
-        <tr>
-            <td>Общее</td>
-            <td id="total-wins">0</td>
-            <td id="total-best-time">00:00</td>
-        </tr>
     </table>
     <button class="back-button" onclick="location.href='index.html'">Назад</button>
 </body>
@@ -167,7 +170,6 @@ function loadStatistics() {
                 hard: { wins: 0, bestTime: "00:00" },
                 expert: { wins: 0, bestTime: "00:00" },
                 extreme: { wins: 0, bestTime: "00:00" },
-                total: { wins: 0, bestTime: "00:00" }
             };
 
             document.getElementById('easy-wins').innerText = statistics.easy.wins;
@@ -180,8 +182,6 @@ function loadStatistics() {
             document.getElementById('expert-best-time').innerText = statistics.expert.bestTime;
             document.getElementById('extreme-wins').innerText = statistics.extreme.wins;
             document.getElementById('extreme-best-time').innerText = statistics.extreme.bestTime;
-            document.getElementById('total-wins').innerText = statistics.total.wins;
-            document.getElementById('total-best-time').innerText = statistics.total.bestTime;
         }
         setTheme(); // Установка темы
         loadStatistics();
