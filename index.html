@@ -17,7 +17,7 @@
     background-color: #f7f9fc;
     padding: 1rem; /* Добавьте немного отступа */
     overflow: hidden; /* Убирает прокрутку по всей странице */
-    transition: background-color 0.5s ease, color 0.5s ease; /* Плавный переход цвета фона и текста */
+    transition: background-color 0.8s ease, color 0.8s ease; /* Плавный переход цвета фона и текста */
 }
         body.dark {
             background-color: #2b2b2b; /* Темный фон */
@@ -1384,10 +1384,11 @@ function restartGame() {
     
     resetLives(); // Сбрасываем жизни
     elapsedTime = 0; // Сброс времени
+    isPaused = false; // Сбрасываем состояние паузы
     generateSudokuBoard(currentLevel); // Генерируем новое игровое поле
     startTimer(); // Запускаем таймер
     document.getElementById('win-modal').style.display = 'none'; // Скрываем окно "Выигрыш"
-
+    
     // Проверка и показ межэкранной рекламы перед началом новой игры
     checkAdReadyInterstitial()
         .then(() => {
@@ -1399,8 +1400,6 @@ function restartGame() {
         .catch(error => {
             console.error('Ошибка при проверке рекламы:', error);
         });
-
-    isPaused = false; // Сбрасываем состояние паузы
 }
 
 setTheme();
