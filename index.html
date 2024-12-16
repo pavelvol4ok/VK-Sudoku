@@ -736,37 +736,6 @@ function onGameWin() {
 // Инициализация VK Bridge
 vkBridge.send("VKWebAppInit", {});
 
-// Показ баннера рекламы
-function showBannerAd() {
-    vkBridge.send("VKWebAppShowBannerAd")
-        .then(response => {
-            console.log('Баннерная реклама показана:', response);
-        })
-        .catch(error => {
-            console.error('Ошибка при показе баннерной рекламы:', error);
-        });
-}
-
-// Скрытие баннера рекламы
-function hideBannerAd() {
-    vkBridge.send("VKWebAppHideBannerAd")
-        .then(response => {
-            console.log('Баннерная реклама скрыта:', response);
-        })
-        .catch(error => {
-            console.error('Ошибка при скрытии баннерной рекламы:', error);
-        });
-}
-
-// Подписка на события
-vkBridge.subscribe((e) => {
-    if (e.detail.type === 'VKWebAppBannerAdUpdated') {
-        console.log('Баннерная реклама обновлена:', e);
-    } else if (e.detail.type === 'VKWebAppBannerAdClosedByUser') {
-        console.log('Пользователь закрыл рекламу:', e);
-    }
-});
-
 function checkAndShowAd() {
     vkBridge.send('VKWebAppCheckNativeAds')
     .then(data => {
@@ -828,22 +797,14 @@ function showAdReward() {
         });
 }
 
-function checkFirstLaunch() {
-    return localStorage.getItem('hasLaunched') === null; // Проверяем, был ли первый запуск
-}
-
-function setFirstLaunch() {
-    localStorage.setItem('hasLaunched', 'true'); // Устанавливаем, что игра была запущена
-}
-
 let timerInterval;
 let startTime;
 const difficultyLevels = {
-    easy: 29,
-    medium: 38,
-    hard: 44,
-    expert: 52, // Добавьте уровень для Эксперта
-    extreme: 58, // Добавьте уровень для Экстремального
+    easy: 1,
+    medium: 45,
+    hard: 53,
+    expert: 58, // Добавьте уровень для Эксперта
+    extreme: 64, // Добавьте уровень для Экстремального
 };
 let currentLevel = '';
 let selectedCell = null; // Переменная для хранения выбранной ячейки
@@ -1048,8 +1009,6 @@ function showMenu() {
     document.getElementById('menu').style.opacity = '1';
     document.getElementById('game').style.display = 'none';
     clearInterval(timerInterval);
-    // Скрыть баннер
-    hideBannerAd();
 }
 
 function resizeSudokuBoard() {
@@ -1109,16 +1068,16 @@ function startGame(level) {
     generateSudokuBoard(level);
     startTimer(); // Запускать таймер с нуля
 
-    // Если это первый запуск, не показывайте межэкранную рекламу
-    if (checkFirstLaunch()) {
-        setFirstLaunch(); // Обновляем статус, что игра была запущена
-    } else {
-        // Показываем межэкранную рекламу, если это не первый запуск
-        showAdInterstitial(); // Показываем рекламу
-    }
+    checkAndShowAd();
 
-    // Показ баннера рекламы, когда игра начинается
-    showBannerAd();
+    // Проверка межэкранной рекламы перед началом игры
+    checkAdReadyInterstitial()
+        .then(() => {
+            return showAdInterstitial(); // Показать межэкранную рекламу
+        })
+        .catch(error => {
+            console.error('Ошибка при проверке рекламы:', error);
+        });
 }
 
 function endGame() 
@@ -1419,23 +1378,28 @@ function resumeGame() {
 }
 
 function restartGame() {
-    // Скрываем модальные окна
-    document.querySelector('.win-modal').style.display = 'none'; // Скрываем win-modal
-    document.querySelector('.pause-modal').style.display = 'none'; // Скрываем pause-modal
-    document.getElementById('game-over-modal').style.display = 'none'; // Скрываем game-over-modal
-   
-    resetLives(); // Сброс жизней
-    elapsedTime = 0; // Сброс времени
-    isPaused = false; // Сбрасываем состояние паузы
-    generateSudokuBoard(currentLevel); // Генерируем новое игровое поле
-    startTimer(); // Запускаем таймер
-    document.getElementById('win-modal').style.display = 'none'; // Скрываем окно "Выигрыш"
+    document.querySelector('.win-modal').style.display = 'none'; // Скрываем модальное окно выигрыша
+    document.querySelector('.pause-modal').style.display = 'none'; // Скрываем модальное окно паузы, если оно открыто
+    document.getElementById('game-over-modal').style.display = 'none'; // Скрываем модальное окно "Game Over"
+    
+    resetLives(); // Сбрасываем жизни
+elapsedTime = 0; // Сброс времени
+isPaused = false; // Сбрасываем состояние паузы
+generateSudokuBoard(currentLevel); // Генерируем новое игровое поле
+startTimer(); // Запускаем таймер
+document.getElementById('win-modal').style.display = 'none'; // Скрываем окно "Выигрыш"
 
-    // Всегда показываем межэкранную рекламу при перезапуске
-    showAdInterstitial();
-
-    // Показ баннера рекламы, когда игра начинается
-    showBannerAd();
+// Проверка и показ межэкранной рекламы перед началом новой игры
+checkAdReadyInterstitial()
+    .then(() => {
+        return showAdInterstitial(); // Показать межэкранную рекламу
+    })
+    .then(() => {
+        // Если реклама успешно показана, можно продолжать игру
+    })
+    .catch(error => {
+        console.error('Ошибка при проверке рекламы:', error);
+    });
 }
 
 setTheme();
