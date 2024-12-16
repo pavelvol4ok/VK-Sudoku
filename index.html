@@ -736,6 +736,37 @@ function onGameWin() {
 // Инициализация VK Bridge
 vkBridge.send("VKWebAppInit", {});
 
+// Показ баннера рекламы
+function showBannerAd() {
+    vkBridge.send("VKWebAppShowBannerAd")
+        .then(response => {
+            console.log('Баннерная реклама показана:', response);
+        })
+        .catch(error => {
+            console.error('Ошибка при показе баннерной рекламы:', error);
+        });
+}
+
+// Скрытие баннера рекламы
+function hideBannerAd() {
+    vkBridge.send("VKWebAppHideBannerAd")
+        .then(response => {
+            console.log('Баннерная реклама скрыта:', response);
+        })
+        .catch(error => {
+            console.error('Ошибка при скрытии баннерной рекламы:', error);
+        });
+}
+
+// Подписка на события
+vkBridge.subscribe((e) => {
+    if (e.detail.type === 'VKWebAppBannerAdUpdated') {
+        console.log('Баннерная реклама обновлена:', e);
+    } else if (e.detail.type === 'VKWebAppBannerAdClosedByUser') {
+        console.log('Пользователь закрыл рекламу:', e);
+    }
+});
+
 function checkAndShowAd() {
     vkBridge.send('VKWebAppCheckNativeAds')
     .then(data => {
@@ -1009,6 +1040,8 @@ function showMenu() {
     document.getElementById('menu').style.opacity = '1';
     document.getElementById('game').style.display = 'none';
     clearInterval(timerInterval);
+    // Скрыть баннер
+    hideBannerAd();
 }
 
 function resizeSudokuBoard() {
@@ -1069,6 +1102,8 @@ function startGame(level) {
     startTimer(); // Запускать таймер с нуля
 
     checkAndShowAd();
+    // Показ баннера рекламы, когда игра начинается
+    showBannerAd();
 
     // Проверка межэкранной рекламы перед началом игры
     checkAdReadyInterstitial()
