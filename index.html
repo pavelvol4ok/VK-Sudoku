@@ -1109,25 +1109,16 @@ function startGame(level) {
     generateSudokuBoard(level);
     startTimer(); // Запускать таймер с нуля
 
-// Если это первый запуск, не показывайте рекламу
-if (checkFirstLaunch()) {
-            setFirstLaunch(); // Обновляем статус, что игра была запущена
-        } else {
-            // Показываем межэкранную рекламу, если это не первый запуск
-            checkAndShowAd();; // Показываем рекламу
-        }
+    // Если это первый запуск, не показывайте межэкранную рекламу
+    if (checkFirstLaunch()) {
+        setFirstLaunch(); // Обновляем статус, что игра была запущена
+    } else {
+        // Показываем межэкранную рекламу, если это не первый запуск
+        showAdInterstitial(); // Показываем рекламу
+    }
 
     // Показ баннера рекламы, когда игра начинается
     showBannerAd();
-
-    // Проверка межэкранной рекламы перед началом игры
-    checkAdReadyInterstitial()
-        .then(() => {
-            return showAdInterstitial(); // Показать межэкранную рекламу
-        })
-        .catch(error => {
-            console.error('Ошибка при проверке рекламы:', error);
-        });
 }
 
 function endGame() 
