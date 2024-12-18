@@ -936,30 +936,25 @@ function clearHighlight()
 
 let lives = 3; // Общее количество жизней
 
-function selectNumber(num) 
-{
-    if (selectedCell) 
-    {
+function selectNumber(num) {
+    if (selectedCell) {
         const cellRow = selectedCell.parentElement.rowIndex;
         const cellCol = selectedCell.cellIndex;
 
         // Проверяем, является ли ячейка изначально заполненной
-        if (initialNumbers[cellRow][cellCol] === null) 
-        {
+        if (initialNumbers[cellRow][cellCol] === null) {
             // Если ячейка не была изначально заполнена, мы можем заменить её
             // Проверяем на допустимость по полному решению
-            if (solutionGrid[cellRow][cellCol] === num) 
-            {
+            if (solutionGrid[cellRow][cellCol] === num) {
                 selectedCell.textContent = num;
                 selectedCell.classList.add('player-number');
                 selectedCell.classList.remove('incorrect');
-            } 
-            else 
-            {
+            } else {
                 selectedCell.classList.add('incorrect'); // Помечаем ячейку, как неправильную
                 selectedCell.textContent = num; // Устанавливаем введенное число
                 loseLife(); // Убрать жизнь
             }
+            highlightNumber(num); // Подсветка всех ячеек с выбранным числом
         }
         // Если ячейка изначально заполнена, ничего не делаем.
 
