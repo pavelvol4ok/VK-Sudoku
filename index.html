@@ -1368,11 +1368,12 @@ function clearNumber() {
     if (selectedCell) { // Проверяем, выбрана ли ячейка
         const cellRow = selectedCell.parentElement.rowIndex;
         const cellCol = selectedCell.cellIndex;
-        
+
         // Проверяем, содержит ли ячейка изначально заданное число
         if (initialNumbers[cellRow][cellCol] === null) { // Значение null означает пустоту
             selectedCell.textContent = ''; // Очищаем содержимое выбранной ячейки
             selectedCell.classList.remove('player-number'); // Убираем стиль для пользовательского числа
+            clearHighlight(); // Убираем выделение для всех ячеек
         } 
     }
 }
