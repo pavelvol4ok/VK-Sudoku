@@ -6,39 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Статистика Судоку</title>
     <style>
-        body.dark {
-            background-color: #2b2b2b; /* Темный фон */
-        }
+body.dark {
+background-color: #2b2b2b; / Темный фон /
+}
 
-        body.dark h1 {
-            color: #d6d6d6; /* Белый цвет текста для заголовка */
-        }
+body.dark h1 {
+    color: #d6d6d6; /* Белый цвет текста для заголовка */
+}
 
-        /* Стили для таблицы в темной теме */
-        body.dark table {
-            border: 3px solid #d6d6d6; /* Цвет контура таблицы в темной теме */
-        }
 
-        /* Стили для заголовка таблицы в темной теме */
-        body.dark th {
-            background-color: #42455a; /* Цвет шапки таблицы в темной теме */
-            color: #ffffff; /* Белый текст */
-            border: 2px solid #d6d6d6; /* Цвет границ заголовков таблицы */
-        }
+/* Стили для таблицы в темной теме */
+body.dark table {
+    border: 3px solid #d6d6d6; /* Цвет контура таблицы в темной теме */
+}
 
-        /* Стили для ячеек таблицы в темной теме */
-        body.dark td {
-            background-color: #33373d; /* Цвет фона ячеек в темной теме */
-            color: #d6d6d6; /* Цвет текста в ячейках */
-            border-color: #d6d6d6; /* Цвет рамки для ячеек */
-        }
+/* Стили для заголовка таблицы в темной теме */
+body.dark th {
+    background-color: #42455a; /* Цвет шапки таблицы в темной теме */
+    color: #ffffff; /* Белый текст */
+    border: 2px solid #d6d6d6; /* Цвет границ заголовков таблицы */
+}
 
-        /* Стили для кнопки в темной теме */
-        body.dark .back-button {
-            background-color: #606479; /* Голубой цвет кнопки */
-            color: #d6d6d6; /* Белый цвет текста кнопки */
-            border-color: #606479;
-        }
+/* Стили для ячеек таблицы в темной теме */
+body.dark td {
+    background-color: #33373d; /* Цвет фона ячеек в темной теме */
+    color: #d6d6d6; /* Цвет текста в ячейках */
+    border-color: #d6d6d6; /* Цвет рамки для ячеек */
+}
+
+            /* Стили для кнопки в темной теме */
+    body.dark .back-button {
+        background-color: #606479; /* Голубой цвет кнопки */
+color: #d6d6d6; /* Белый цвет текста кнопки */
+border-color: #606479; 
+    }
+
 
         body {
             font-family: Arial, sans-serif;
@@ -147,54 +149,41 @@
     </table>
     <button class="back-button" onclick="location.href='index.html'">Назад</button>
 </body>
-<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 <script>
-    // Установка темы
-    function setTheme() {
-        vkBridge.send('VKWebAppStorageGet', { key: 'darkTheme' })
-            .then(data => {
-                const isDarkTheme = data.value === 'true';
-                const body = document.body;
-                if (isDarkTheme) {
-                    body.classList.add('dark');
-                } else {
-                    body.classList.remove('dark');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка при установке темы:', error);
-            });
-    }
 
-    // Загрузка статистики из VK
-    function loadStatistics() {
-        vkBridge.send('VKWebAppStorageGet', { key: 'sudokuStatistics' })
-            .then(data => {
-                const statistics = data.value ? JSON.parse(data.value) : {
-                    easy: { wins: 0, bestTime: "00:00" },
-                    medium: { wins: 0, bestTime: "00:00" },
-                    hard: { wins: 0, bestTime: "00:00" },
-                    expert: { wins: 0, bestTime: "00:00" },
-                    extreme: { wins: 0, bestTime: "00:00" },
-                };
+// Установка темы
+function setTheme() {
+            const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
+            const body = document.body;
+            if (isDarkTheme) {
+                body.classList.add('dark');
+            } else {
+                body.classList.remove('dark');
+            }
+        }
 
-                document.getElementById('easy-wins').innerText = statistics.easy.wins;
-                document.getElementById('easy-best-time').innerText = statistics.easy.bestTime;
-                document.getElementById('medium-wins').innerText = statistics.medium.wins;
-                document.getElementById('medium-best-time').innerText = statistics.medium.bestTime;
-                document.getElementById('hard-wins').innerText = statistics.hard.wins;
-                document.getElementById('hard-best-time').innerText = statistics.hard.bestTime;
-                document.getElementById('expert-wins').innerText = statistics.expert.wins;
-                document.getElementById('expert-best-time').innerText = statistics.expert.bestTime;
-                document.getElementById('extreme-wins').innerText = statistics.extreme.wins;
-                document.getElementById('extreme-best-time').innerText = statistics.extreme.bestTime;
-            })
-            .catch(error => {
-                console.error('Ошибка при загрузке статистики:', error);
-            });
-    }
+// Загрузка статистики из localStorage
+function loadStatistics() {
+            const statistics = JSON.parse(localStorage.getItem('sudokuStatistics')) || {
+                easy: { wins: 0, bestTime: "00:00" },
+                medium: { wins: 0, bestTime: "00:00" },
+                hard: { wins: 0, bestTime: "00:00" },
+                expert: { wins: 0, bestTime: "00:00" },
+                extreme: { wins: 0, bestTime: "00:00" },
+            };
 
-    setTheme(); // Установка темы
-    loadStatistics(); // Загрузка статистики
-</script>
+            document.getElementById('easy-wins').innerText = statistics.easy.wins;
+            document.getElementById('easy-best-time').innerText = statistics.easy.bestTime;
+            document.getElementById('medium-wins').innerText = statistics.medium.wins;
+            document.getElementById('medium-best-time').innerText = statistics.medium.bestTime;
+            document.getElementById('hard-wins').innerText = statistics.hard.wins;
+            document.getElementById('hard-best-time').innerText = statistics.hard.bestTime;
+            document.getElementById('expert-wins').innerText = statistics.expert.wins;
+            document.getElementById('expert-best-time').innerText = statistics.expert.bestTime;
+            document.getElementById('extreme-wins').innerText = statistics.extreme.wins;
+            document.getElementById('extreme-best-time').innerText = statistics.extreme.bestTime;
+        }
+        setTheme(); // Установка темы
+        loadStatistics();
+        </script>
 </html>
