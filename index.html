@@ -719,6 +719,38 @@ function updateStatistics(level, elapsedTime) {
     localStorage.setItem('sudokuStatistics', JSON.stringify(statistics));
 }
 
+function updateStatistics(level, elapsedTime) {
+    // Загружаем текущую статистику из localStorage
+    statistics = JSON.parse(localStorage.getItem('sudokuStatistics')) || statistics;
+
+    // Обновляем статистику
+    statistics[level].wins += 1;
+
+    // Обновляем лучшее время
+    if (statistics[level].bestTime === "00:00" || compareTimes(elapsedTime, statistics[level].bestTime) < 0) {
+        statistics[level].bestTime = elapsedTime;
+    }
+
+    // Обновляем общее количество побед и лучшее время
+    statistics.total.wins += 1;
+    // Логика для общего времени, можете добавить на свой вкус.
+
+    // Сохраняем обновленную статистику в localStorage
+    localStorage.setItem('sudokuStatistics', JSON.stringify(statistics));
+}
+
+function loadStatistics() {
+    vkBridge.send('VKWebAppStorageGet', { key: 'sudokuStatistics' })
+        .then(data => {
+            if (data && data.value) {
+                statistics = JSON.parse(data.value) || statistics;
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке статистики:', error);
+        });
+}        
+
 function compareTimes(time1, time2) {
     const [min1, sec1] = time1.split(':').map(Number);
     const [min2, sec2] = time2.split(':').map(Number);
@@ -829,11 +861,29 @@ function showAdReward() {
 }
 
 function checkFirstLaunch() {
-    return localStorage.getItem('hasLaunched') === null; // Проверяем, был ли первый запуск
+    vkBridge.send('VKWebAppStorageGet', { key: 'hasLaunched' })
+        .then(data => {
+            return data.value === null; // Проверяем, был ли первый запуск
+        })
+        .catch(error => {
+            console.error('Ошибка при проверке первого запуска:', error);
+            return true; // Если произошла ошибка, считаем, что это первый запуск
+        });
 }
 
 function setFirstLaunch() {
-    localStorage.setItem('hasLaunched', 'true'); // Устанавливаем, что игра была запущена
+    vkBridge.send('VKWebAppStorageSet', {
+        key: 'hasLaunched',
+        value: 'true'
+    })
+    .then(data => {
+        if (data.result) {
+            console.log('Статус первого запуска установлен');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка при установке статуса первого запуска:', error);
+    });
 }
 
 let timerInterval;
@@ -856,20 +906,36 @@ let previousCol = null; // Переменная для хранения пред
 
 // Функция для применения темы
 function setTheme() {
-        const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
-        document.body.classList.toggle('dark', isDarkTheme);
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
-            themeToggle.checked = isDarkTheme; // Устанавливаем состояние переключателя
-        }
-    }
+    vkBridge.send('VKWebAppStorageGet', { key: 'darkTheme' })
+        .then(data => {
+            const isDarkTheme = data.value === 'true';
+            document.body.classList.toggle('dark', isDarkTheme);
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.checked = isDarkTheme; // Устанавливаем состояние переключателя
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при установке темы:', error);
+        });
+}
 
-    // Функция для переключения темы
-    function toggleTheme() {
-        const body = document.body;
-        const isDark = body.classList.toggle('dark');
-        localStorage.setItem('darkTheme', isDark); // Сохраняем выбор темы
-    }
+function toggleTheme() {
+    const body = document.body;
+    const isDark = body.classList.toggle('dark');
+    vkBridge.send('VKWebAppStorageSet', {
+        key: 'darkTheme',
+        value: isDark // Сохраняем 'true' или 'false'
+    })
+    .then(data => {
+        if (data.result) {
+            console.log('Тема сохранена успешно');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка при сохранении темы:', error);
+    });
+}
     
 function selectCell(cell) 
 {
