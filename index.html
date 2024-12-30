@@ -1427,8 +1427,13 @@ function restartGame() {
     startTimer(); // Запускаем таймер
     document.getElementById('win-modal').style.display = 'none'; // Скрываем окно "Выигрыш"
 
-    // Всегда показываем межэкранную рекламу при перезапуске
-    showAdInterstitial();
+    // Если это первый запуск, не показывайте межэкранную рекламу
+    if (checkFirstLaunch()) {
+        setFirstLaunch(); // Обновляем статус, что игра была запущена
+    } else {
+        // Показываем межэкранную рекламу, если это не первый запуск
+        showAdInterstitial(); // Показываем рекламу
+    }
 
     // Показ баннера рекламы, когда игра начинается
     showBannerAd();
